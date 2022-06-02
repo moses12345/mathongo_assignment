@@ -40,14 +40,26 @@ const login = async (req, res) => {
         )} Email Id`,
       });
     }
-    const user = await UserSchema.findOne({ email: req.body.email }).lean();
+    const user = await UserSchema.findOne({
+      email: req.body.email,
+      isemailvalid: true,
+    }).lean();
+    if (user == null) {
+      return res.status(400).json({
+        message: `User ${JSON.stringify(
+          req.body.email
+        )} Email Id Is Not Verified `,
+      });
+    }
     const comparePassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
     if (comparePassword) {
       return res.json({
-        message:`Hi ${user.firstname + " " + user.lastname} You Logged In Successfully`
+        message: `Hi ${
+          user.firstname + " " + user.lastname
+        } You Logged In Successfully`,
       });
     }
     return res.status(400).json({ message: "Check your password" });
@@ -115,7 +127,7 @@ const verifyEmail = async (req, res) => {
     }).lean();
     if (verify) {
       const updateVerify = await User.updateOne(
-        { email:req.body.email },
+        { email: req.body.email },
         {
           isemailvalid: true,
         }
