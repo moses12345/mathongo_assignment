@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     validemailotp: {
       type: String,
-      match: [/^[a-zA-Z0-9]+$/, "is invalid"],
+      match: [/^[0-9]+$/, "is invalid"],
       default:null
     },
     isemailvalid: { type: Boolean, default: false },
